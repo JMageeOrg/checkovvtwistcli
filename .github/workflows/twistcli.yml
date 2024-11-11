@@ -3,7 +3,7 @@ name: Twistcli scan
 on: [workflow_dispatch]
 
 env:
-  IMAGE_NAME: https://github.com/JMageeOrg/Checkov-Twistcli.git:${{ github.sha }}
+  IMAGE_NAME: JMageeOrg/CheckovvTwistcli:${{ github.sha }}
 
 jobs:
   # Jobs are ran independently from each other, so build and scan needs to be in a single job.
