@@ -27,7 +27,6 @@ jobs:
 
       - name: Scan the image
         env:
-        
           JOB_NAME: ${{ github.event.repository.name }}
           # Set Build = Commit SHA
           BUILD_ID: ${{ github.sha }}
