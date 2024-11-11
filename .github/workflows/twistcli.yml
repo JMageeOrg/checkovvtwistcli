@@ -32,3 +32,11 @@ jobs:
           # Set Build = Commit SHA
           BUILD_ID: ${{ github.sha }}
         run: ./twistcli images scan --address ${{ secrets.PC_RUNTIME_URL }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --details $IMAGE_NAME --SBOM cyclonedx_json
+      
+      - name: Scan the image
+        env:
+          # Set Jenkins Project = Repository Name
+          JOB_NAME: ${{ github.event.repository.name }}
+          # Set Build = Commit SHA
+          BUILD_ID: ${{ github.sha }}
+        run: ./twistcli images scan --address ${{ vars.PCC_CONSOLE_URL }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --details $IMAGE_NAME
