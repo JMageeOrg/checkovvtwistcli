@@ -1,0 +1,34 @@
+name: Twistcli scan
+
+on: [workflow_dispatch]
+
+env:
+  IMAGE_NAME: se-cloud-weur/twistclivscheckov:${{ github.sha }}
+
+jobs:
+  # Jobs are ran independently from each other, so build and scan needs to be in a single job.
+  build-and-scan:
+    name: Build and scan image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        # Defaults are sufficient generally
+        # https://github.com/actions/checkout#usage
+
+      - name: Download twistcli from the Prisma Cloud Compute Console
+        run: |
+          curl --user ${{ secrets.PCC_USER }}:${{ secrets.PCC_PASS }} --output ./twistcli ${{ secrets.PC_RUNTIME_URL  }}/api/v1/util/twistcli
+          chmod a+x ./twistcli
+
+      - name: Build the image
+        run: docker build -t $IMAGE_NAME .
+
+      - name: Scan the image
+        env:
+        
+          JOB_NAME: ${{ github.event.repository.name }}
+          # Set Build = Commit SHA
+          BUILD_ID: ${{ github.sha }}
+        run: ./twistcli images scan --address ${{ secrets.PC_RUNTIME_URL }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --details $IMAGE_NAME --SBOM cyclonedx_json
